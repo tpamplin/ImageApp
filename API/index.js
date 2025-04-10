@@ -52,9 +52,9 @@ app.get("/images", async (req, res) => {
 /**
  * Upload an image
  */
-app.post("/images", upload.single("image"), async (req, res) => {
+app.post("/images", upload.single("file"), async (req, res) => {
     const file = req.file;
-    const fileName = req.file.originalName;
+    const fileName = req.file.originalname;
     console.log(file, fileName);
     const uploadParams = {
         Bucket: bucket,
