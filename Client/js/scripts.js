@@ -12,24 +12,17 @@ const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: formData,
+    fetch(url, {
+        method: "POST",
+        body: formData,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Success: ", data);
+        })
+        .catch((error) => {
+            console.error("Error: ", error);
         });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log("Success: ", result);
-            alert("File uploaded successfully!");
-        } else {
-            console.error("Error: ", response.statusText);
-            alert("File upload failed");
-        }
-    } catch (error) {
-        console.error("Error", error);
-        alert("An error occured during upload.");
-    }
 };
 
 const loadFiles = async () => {
