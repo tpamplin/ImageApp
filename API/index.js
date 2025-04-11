@@ -11,6 +11,9 @@ const port = 8080;
 
 app.use(express.static("public"));
 
+const cors = require("cors");
+app.use(cors());
+
 require("dotenv").config();
 
 const s3Client = new S3Client({
@@ -63,7 +66,6 @@ app.post("/images", upload.single("file"), async (req, res) => {
         ContentType: req.file.mimetype,
     };
     const response = await s3Client.send(new PutObjectCommand(uploadParams));
-    res.send(response);
 });
 
 /**
@@ -74,7 +76,7 @@ app.get("images/:imageKey", (req, res) => {
 
     const params = {
         Bucket: bucket,
-        Key: fileName,
+        Key: imageKey,
     };
 
     s3.getObject(params, (err, data) => {
