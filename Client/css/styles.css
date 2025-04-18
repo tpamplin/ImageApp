@@ -1,0 +1,11 @@
+.display-image {
+    width: 150px;
+    height: auto;
+    margin: 10px;
+}
+
+.image-list-entry {
+    display: flex;
+    border: 2px solid black;
+    margin: auto;
+}

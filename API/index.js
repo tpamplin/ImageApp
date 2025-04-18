@@ -1,13 +1,20 @@
-const { S3Client, ListBucketsCommand, ListObjectsV2Command, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { readFile } = require("node:fs/promises");
+const {
+    S3Client,
+    ListBucketsCommand,
+    ListObjectsV2Command,
+    PutObjectCommand,
+    GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 
 const fs = require("fs");
-
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
 
 const express = require("express");
 const app = express();
 const port = 8080;
+
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 app.use(express.static("public"));
 
@@ -57,37 +64,36 @@ app.get("/images", async (req, res) => {
  */
 app.post("/images", upload.single("file"), async (req, res) => {
     const file = req.file;
-    const fileName = req.file.originalname;
-    console.log(file, fileName);
+    const fileName = file.originalname;
+    console.log("the file is: ", file, "The filename is: ", fileName);
+
     const uploadParams = {
         Bucket: bucket,
         Key: fileName,
-        Body: req.file.buffer,
+        Body: await readFile(file.path),
         ContentType: req.file.mimetype,
     };
+    console.log(uploadParams);
     const response = await s3Client.send(new PutObjectCommand(uploadParams));
 });
 
 /**
  * Get an image by key
  */
-app.get("images/:imageKey", (req, res) => {
+app.get("/images/:imageKey", async (req, res) => {
     const imageKey = req.params.imageKey;
+    console.log("retrieving ", imageKey);
 
     const params = {
         Bucket: bucket,
         Key: imageKey,
     };
 
-    s3.getObject(params, (err, data) => {
-        if (err) {
-            return res.status(500).send("Error retrieving image from S3");
-        }
+    console.log(params);
+    const data = await s3Client.send(new GetObjectCommand(params));
 
-        res.setHeader("Content-Type", data.ContentType);
-
-        res.send(data.Body);
-    });
+    console.log(data);
+    res.send(data);
 });
 
 /**

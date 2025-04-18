@@ -1,5 +1,7 @@
 const url = "http://localhost:8080/images";
 
+const bucketUrl = "http://localhost:4566/image-bucket/";
+
 const uploadFile = async () => {
     const fileInput = document.getElementById("file-upload");
     const file = fileInput.files[0];
@@ -12,7 +14,7 @@ const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    fetch(url, {
+    await fetch(url, {
         method: "POST",
         body: formData,
     })
@@ -40,9 +42,22 @@ const loadFiles = async () => {
             console.log(result);
 
             for (let i = 0; i < result.length; i++) {
-                const imageEntry = document.createElement("p");
-                const textNode = document.createTextNode(result[i]);
-                imageEntry.appendChild(textNode);
+                const key = result[i];
+
+                const imageEntry = document.createElement("div");
+                imageEntry.setAttribute("class", "image-list-entry");
+
+                const fileName = document.createElement("p");
+                const textNode = document.createTextNode(key);
+                fileName.appendChild(textNode);
+
+                const displayImage = document.createElement("img");
+                displayImage.setAttribute("src", bucketUrl + key);
+                displayImage.setAttribute("class", "display-image");
+
+                imageEntry.appendChild(fileName);
+                imageEntry.appendChild(displayImage);
+
                 library.appendChild(imageEntry);
             }
         } else {
@@ -56,5 +71,3 @@ const loadFiles = async () => {
 };
 
 loadFiles();
-
-const downloadFile = async () => {};
