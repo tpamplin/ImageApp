@@ -2,6 +2,13 @@ const url = "http://18.191.189.6:8080/images";
 
 const bucketUrl = "https://2-3-image-bucket.s3.us-east-1.amazonaws.com/";
 
+const handleUpload = () => {
+    uploadFile();
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+};
+
 const uploadFile = async () => {
     const fileInput = document.getElementById("file-upload");
     const file = fileInput.files[0];
@@ -18,7 +25,12 @@ const uploadFile = async () => {
         method: "POST",
         body: formData,
     })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP Error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then((data) => {
             console.log("Success: ", data);
         })
@@ -55,8 +67,15 @@ const loadFiles = async () => {
                 displayImage.setAttribute("src", bucketUrl + key);
                 displayImage.setAttribute("class", "display-image");
 
+                const downloadLink = document.createElement("a");
+                downloadLink.setAttribute("href", bucketUrl + key);
+
+                const downloadLinkText = document.createTextNode("View Image");
+                downloadLink.appendChild(downloadLinkText);
+
                 imageEntry.appendChild(fileName);
                 imageEntry.appendChild(displayImage);
+                imageEntry.appendChild(downloadLink);
 
                 library.appendChild(imageEntry);
             }
