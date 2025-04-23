@@ -25,8 +25,11 @@ require("dotenv").config();
 
 const s3Client = new S3Client({
     region: "us-east-1",
-    endpoint: process.env.AWS_ENDPOINT,
-    forcePathStyle: true,
+
+    credentials: {
+        accessKeyId: process.env.ACCESS_KEY,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    },
 });
 
 const bucket = process.env.AWS_BUCKET;

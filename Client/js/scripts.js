@@ -1,6 +1,6 @@
 const url = "http://localhost:8080/images";
 
-const bucketUrl = "http://localhost:4566/image-bucket/";
+const bucketUrl = "https://2-3-image-bucket.s3.us-east-1.amazonaws.com/";
 
 const uploadFile = async () => {
     const fileInput = document.getElementById("file-upload");
