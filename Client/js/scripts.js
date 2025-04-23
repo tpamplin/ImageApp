@@ -1,4 +1,4 @@
-const url = "http://localhost:8080/images";
+const url = "http://18.191.189.6:8080/images";
 
 const bucketUrl = "https://2-3-image-bucket.s3.us-east-1.amazonaws.com/";
 
