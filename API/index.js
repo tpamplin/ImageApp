@@ -72,7 +72,7 @@ app.post("/images", upload.single("file"), async (req, res) => {
 
     const uploadParams = {
         Bucket: bucket,
-        Key: fileName,
+        Key: "original/" + fileName,
         Body: await readFile(file.path),
         ContentType: req.file.mimetype,
     };
