@@ -1,8 +1,8 @@
-import { S3 } from "@aws-sdk/client-s3";
+import { S3Client, getObjectCommand } from "@aws-sdk/client-s3";
 
 import sharp from "sharp";
 
-const s3 = new S3();
+const s3 = new S3Client();
 
 export const handler = async (event) => {
     const bucketName = event.Records[0].s3.bucket.name;
@@ -19,10 +19,11 @@ export const handler = async (event) => {
     }
 
     try {
-        const { Body, ContentType } = await s3.GetObject({
+        const command = new s3.GetObjectCommand({
             Bucket: bucketName,
             Key: key,
         });
+        const { Body, ContentType } = await S3Client.send(command);
 
         const imageBuffer = await Body.transformToByteArray();
 
