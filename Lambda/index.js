@@ -1,10 +1,10 @@
-import { S3Client, getObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import sharp from "sharp";
 
-const s3 = new S3Client();
-
 export const handler = async (event) => {
+    const s3 = new S3Client({});
+
     const bucketName = event.Records[0].s3.bucket.name;
     const key = event.Records[0].s3.object.key;
     const filename = key.split("/").pop();
@@ -19,11 +19,11 @@ export const handler = async (event) => {
     }
 
     try {
-        const command = new s3.GetObjectCommand({
+        const getCommand = new GetObjectCommand({
             Bucket: bucketName,
             Key: key,
         });
-        const { Body, ContentType } = await S3Client.send(command);
+        const { Body, ContentType } = await s3.send(getCommand);
 
         const imageBuffer = await Body.transformToByteArray();
 
@@ -31,12 +31,16 @@ export const handler = async (event) => {
 
         const outputKey = `thumbnails/${filename}`;
 
-        await s3.putObject({
+        const putCommand = new PutObjectCommand({
             Bucket: bucketName,
             Key: outputKey,
             Body: imageThumbnail,
             ContentType: ContentType,
         });
+
+        const response = await s3.send(putCommand);
+
+        console.log(response);
 
         return {
             statusCode: 200,
