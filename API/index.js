@@ -24,7 +24,8 @@ app.use(cors());
 require("dotenv").config();
 
 const s3Client = new S3Client({
-    region: "us-east-1",
+    region: "us-east-2",
+    endpoint: process.env.AWS_ENDPOINT,
 
     credentials: {
         accessKeyId: process.env.ACCESS_KEY,

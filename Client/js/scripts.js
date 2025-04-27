@@ -1,6 +1,6 @@
-const url = "http://18.191.189.6:8080/images";
+const url = "http://AC2-load-balancer-1599047323.us-east-2.elb.amazonaws.com:8080/images";
 
-const bucketUrl = "https://2-3-image-bucket.s3.us-east-1.amazonaws.com/";
+const bucketUrl = "https://2-6-image-bucket.s3.us-east-2.amazonaws.com/";
 
 const handleUpload = () => {
     uploadFile();
